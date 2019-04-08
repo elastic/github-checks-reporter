@@ -1,0 +1,22 @@
+{
+    "appKey": {
+      "doc": "GitHub application key",
+      "format": "String",
+      "default": "GITHUB_CHECKS_REPORTER_KEY"
+    },
+    "repoSlug": {
+      "doc": "Repo in owner/repo format",
+      "format": "String",
+      "default": "ghprbGhRepository"
+    },
+    "commitSha": {
+      "doc": "Commit sha for pr",
+      "format": "String",
+      "default": "ghprbActualCommit"
+    },
+    "buildUrl": {
+      "doc": "CI build url",
+      "format": "String",
+      "default": "BUILD_URL"
+    }
+}
