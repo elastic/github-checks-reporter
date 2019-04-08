@@ -1,6 +1,6 @@
 {
   "name": "github-xyz",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "index.js",
   "repository": "git@github.com:elastic/github-checks-reporter.git",
   "author": "Matt Kime <matt@mattki.me>",
