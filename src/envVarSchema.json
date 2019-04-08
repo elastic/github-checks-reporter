@@ -4,6 +4,11 @@
       "format": "String",
       "default": "GITHUB_CHECKS_REPORTER_KEY"
     },
+    "appId": {
+      "doc": "GitHub application id",
+      "format": "String",
+      "default": "GITHUB_CHECKS_REPORTER_ID"
+    },
     "repoSlug": {
       "doc": "Repo in owner/repo format",
       "format": "String",

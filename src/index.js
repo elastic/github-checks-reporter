@@ -15,8 +15,7 @@ const MAX_DETAIL_BYTES = 65535 - 8;
 
 const getClientWithAuth = async function (appId, appKey, owner, repo) {
   const app = new App({
-    id: 26774,
-    //id: appId,
+    id: appId,
     privateKey: appKey
   });
 
