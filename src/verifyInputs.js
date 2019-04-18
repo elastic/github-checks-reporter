@@ -14,10 +14,19 @@ function getPathToRoot( currentDir = process.cwd() ){
   }
 }
 
-function getEnvVars(){
-  // get config file content
+function getConfigFileContent(){
   const configFilePath = getPathToRoot() + CONFIG_FILENAME;
-  const configFileContent = existsSync(configFilePath) ? JSON.parse(readFileSync(configFilePath)) : {};
+  return existsSync(configFilePath) ?
+    JSON.parse(readFileSync(configFilePath)) :
+    {};
+}
+
+function getAppId(){
+  return getConfigFileContent().appId;
+}
+
+function getEnvVars(){
+  const configFileContent = getConfigFileContent();
 
   // mush config with defaults
   const envVarConfig = convict(ENV_VAR_SCHEMA_JSON);
@@ -88,6 +97,7 @@ function getCommandLineArgs(){
 module.exports = function(){
   // appKey, appId, repoSlug, name, cmd, cmdArgs
   return {
+    appId: getAppId(),
     ...getEnvVars(),
     ...getCommandLineArgs(),
   };

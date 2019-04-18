@@ -85,7 +85,7 @@ function spawnAndSplit(cmd, cmdArgs){
     actions: [],
   };
 
-  clientWithAuth.checks.create({
+  await clientWithAuth.checks.create({
     ...commonArgs,
     started_at: new Date().toISOString(),
     status: 'in_progress',
@@ -94,7 +94,7 @@ function spawnAndSplit(cmd, cmdArgs){
       summary: `in progress`,
     },
   }).then((response) => {
-    commonArgs.chech_run_id = response.data.id;
+    commonArgs.check_run_id = response.data.id;
     logRateLimit(response);
   });
 
@@ -137,13 +137,13 @@ function spawnAndSplit(cmd, cmdArgs){
     }
     */
 
-    clientWithAuth.checks.create({
+    clientWithAuth.checks.update({
       ...commonArgs,
       conclusion: code === 0 ? 'success' : 'failure',
       completed_at: new Date().toISOString(),
       output: {
         title,
-        summary: `.`,
+        summary: ` `,
         text: `\`\`\`\n${logs}\n\`\`\``,
         annotations,
         images,

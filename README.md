@@ -19,7 +19,6 @@ call the GitHub API -
 Value | Default environment variable
 ----- | ----------------------------
 appKey | GITHUB_CHECKS_REPORTER_KEY
-appId | GITHUB_CHECKS_REPORTER_ID
 repoSlug | ghprbGhRepository
 commitSha | ghprbActualCommit
 buildUrl | BUILD_URL
@@ -30,6 +29,7 @@ config file located in the project root.
 Example -
 ```json
 {
+  "appId": 26774,
   "envVars": {
     "appKey": "KIBANA_CI_REPORTER_KEY"
   }
