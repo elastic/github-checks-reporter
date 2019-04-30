@@ -59,7 +59,7 @@ function verifyInputs(inputs) {
   Object.keys(envVarSchema).forEach(key => {
     if (typeof inputs[key] === 'undefined') {
       errors.push(
-        `Missing ${envVarSchema[key].doc} in environment variable '${getEnvVarNameMap[key]}'`
+        `Missing ${envVarSchema[key].doc} in environment variable '${getEnvVarNameMap()[key]}'`
       );
     }
   });
