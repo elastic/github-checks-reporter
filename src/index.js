@@ -62,10 +62,11 @@ const logRateLimit = ({
 
 function spawnAndSplit(cmd, cmdArgs) {
   const cmdSpawnConfig = {
-    stdio: ['inherit', 'pipe', 'inherit']
+    stdio: ['inherit', 'pipe', 'pipe']
   };
   const child = spawn(cmd, cmdArgs, cmdSpawnConfig);
   child.stdout.pipe(process.stdout);
+  child.stderr.pipe(process.stderr);
   return child;
 }
 
@@ -100,15 +101,20 @@ async function start() {
 
   let childProcLogs = '';
 
-  // eslint-disable-next-line no-restricted-syntax
-  for await (const data of childProcess.stdout) {
+  childProcess.stdout.on('data', data => {
     childProcLogs += data;
-  }
+  });
 
-  const [code] = await Promise.race([
-    new Promise(resolve => childProcess.once('close', resolve)),
-    new Promise((resolve, reject) => childProcess.once('error', reject))
-  ]);
+  childProcess.stderr.on('data', data => {
+    childProcLogs += data;
+  });
+
+  // eslint-disable-next-line new-cap
+  const code = await new Promise((resolve, reject) => {
+    childProcess.once('close', resolve);
+    childProcess.once('error', reject);
+  });
+
   const logs = prettyLogs(childProcLogs);
   const errorFilePath = `${__dirname}../../target/errors.json`;
   const images = [];
