@@ -1,6 +1,6 @@
 {
   "name": "@elastic/github-checks-reporter",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "src/index.js",
   "repository": "git@github.com:elastic/github-checks-reporter.git",
   "author": "Matt Kime <matt@mattki.me>",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@octokit/app": "^2.2.2",
+    "@octokit/plugin-retry": "^2.2.0",
     "@octokit/request": "^2.4.2",
     "@octokit/rest": "^16.23.2",
     "strip-ansi": "^5.2.0"

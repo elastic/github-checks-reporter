@@ -3,7 +3,8 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 
-const Octokit = require('@octokit/rest');
+const Octokit = require('@octokit/rest')
+  .plugin(require('@octokit/plugin-retry'));
 const App = require('@octokit/app');
 const request = require('@octokit/request');
 const stripAnsi = require('strip-ansi');
