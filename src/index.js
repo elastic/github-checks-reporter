@@ -3,8 +3,7 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 
-const Octokit = require('@octokit/rest')
-  .plugin(require('@octokit/plugin-retry'));
+const Octokit = require('@octokit/rest').plugin(require('@octokit/plugin-retry'));
 const App = require('@octokit/app');
 const request = require('@octokit/request');
 const stripAnsi = require('strip-ansi');
@@ -34,7 +33,12 @@ async function getClientWithAuth(appId, appKey, owner, repo) {
 
   const installationAccessToken = await app.getInstallationAccessToken({ installationId });
 
-  return new Octokit({ auth: `token ${installationAccessToken}` });
+  return new Octokit({
+    retry: {
+      doNotRetry: [] // retry everything!!!
+    },
+    auth: `token ${installationAccessToken}`
+  });
 }
 
 const prettyLogs = txt => {
