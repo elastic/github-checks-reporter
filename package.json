@@ -1,6 +1,6 @@
 {
   "name": "@elastic/github-checks-reporter",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "src/index.js",
   "repository": "git@github.com:elastic/github-checks-reporter.git",
   "author": "Matt Kime <matt@mattki.me>",

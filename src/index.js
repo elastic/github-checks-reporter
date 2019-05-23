@@ -13,7 +13,7 @@ const getInputs = require('./getInputs');
 // removing 8 chars for markdown triple backtick wrap
 const MAX_DETAIL_BYTES = 65535 - 8;
 
-async function getClientWithAuth(appId, appKey, owner, repo) {
+const getClientWithAuthFactory = (appId, appKey, owner, repo) => async () => {
   const app = new App({
     id: appId,
     privateKey: appKey
@@ -35,11 +35,11 @@ async function getClientWithAuth(appId, appKey, owner, repo) {
 
   return new Octokit({
     retry: {
-      doNotRetry: [] // retry everything!!!
+      doNotRetry: [] // retry most everything!!!
     },
     auth: `token ${installationAccessToken}`
   });
-}
+};
 
 const prettyLogs = txt => {
   const truncatedTxt = `[truncated]\n`;
@@ -78,7 +78,7 @@ function spawnAndSplit(cmd, cmdArgs) {
 async function start() {
   const { appKey, appId, repoSlug, commitSha, buildUrl, name, cmd, cmdArgs } = getInputs();
   const [owner, repo] = repoSlug.split('/');
-  const clientWithAuth = await getClientWithAuth(appId, appKey, owner, repo);
+  const getClientWithAuth = getClientWithAuthFactory(appId, appKey, owner, repo);
 
   const title = `${cmd} ${cmdArgs.join(' ')}`;
   const commonArgs = {
@@ -90,7 +90,8 @@ async function start() {
     actions: []
   };
 
-  const checkCreateResponse = await clientWithAuth.checks.create({
+  const createCheckClient = await getClientWithAuth();
+  const checkCreateResponse = await createCheckClient.checks.create({
     ...commonArgs,
     started_at: new Date().toISOString(),
     status: 'in_progress',
@@ -152,7 +153,10 @@ async function start() {
     }
     */
 
-  const checkUpdateResponse = await clientWithAuth.checks.update({
+  // Necessary when tasks run > 1hr.
+  // Could also catch on error and conditionally update client auth
+  const updateCheckClient = await getClientWithAuth();
+  const checkUpdateResponse = await updateCheckClient.checks.update({
     ...commonArgs,
     conclusion: code === 0 ? 'success' : 'failure',
     completed_at: new Date().toISOString(),
