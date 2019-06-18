@@ -35,10 +35,9 @@ const getClientWithAuthFactory = (appId, appKey, owner, repo) => async () => {
 
   return new Octokit({
     retry: {
-      retries: 10,
-      retryAfter: 60,
       doNotRetry: [] // retry most everything!!!
     },
+    request: { retries: 13 },
     auth: `token ${installationAccessToken}`
   });
 };
@@ -171,7 +170,7 @@ async function start() {
     }
   });
   logRateLimit(checkUpdateResponse);
-  process.exit(code);
+  onComplete(code);
 }
 
 start().catch(error => {
