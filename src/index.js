@@ -2,6 +2,7 @@
 
 const { spawn } = require('child_process');
 const fs = require('fs');
+const retry = require('async-retry');
 
 const Octokit = require('@octokit/rest').plugin(require('@octokit/plugin-retry'));
 const App = require('@octokit/app');
@@ -12,6 +13,7 @@ const getInputs = require('./getInputs');
 
 // removing 8 chars for markdown triple backtick wrap
 const MAX_DETAIL_BYTES = 65535 - 8;
+const RETRIES = 13;
 
 const getClientWithAuthFactory = (appId, appKey, owner, repo) => async () => {
   const app = new App({
@@ -22,22 +24,33 @@ const getClientWithAuthFactory = (appId, appKey, owner, repo) => async () => {
   const jwt = app.getSignedJsonWebToken();
   const {
     data: { id: installationId }
-  } = await request('GET /repos/:owner/:repo/installation', {
-    owner,
-    repo,
-    headers: {
-      authorization: `Bearer ${jwt}`,
-      accept: 'application/vnd.github.machine-man-preview+json'
+  } = await retry(
+    async () =>
+      request('GET /repos/:owner/:repo/installation', {
+        owner,
+        repo,
+        headers: {
+          authorization: `Bearer ${jwt}`,
+          accept: 'application/vnd.github.machine-man-preview+json'
+        }
+      }),
+    {
+      retries: RETRIES
     }
-  });
+  );
 
-  const installationAccessToken = await app.getInstallationAccessToken({ installationId });
+  const installationAccessToken = await retry(
+    async () => app.getInstallationAccessToken({ installationId }),
+    {
+      retries: RETRIES
+    }
+  );
 
   return new Octokit({
     retry: {
       doNotRetry: [] // retry most everything!!!
     },
-    request: { retries: 13 },
+    request: { retries: RETRIES },
     auth: `token ${installationAccessToken}`
   });
 };
@@ -170,7 +183,7 @@ async function start() {
     }
   });
   logRateLimit(checkUpdateResponse);
-  onComplete(code);
+  process.exit(code);
 }
 
 start().catch(error => {
