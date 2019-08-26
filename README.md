@@ -16,12 +16,12 @@ example
 github-checks-reporter relies on a number of environment variables in order to 
 call the GitHub API -
 
-Value | Default environment variable
------ | ----------------------------
-appKey | GITHUB_CHECKS_REPORTER_KEY
-repoSlug | ghprbGhRepository
-commitSha | ghprbActualCommit
-buildUrl | BUILD_URL
+Value | Default environment variable | Use
+----- | ----------------------------------
+appKey | GITHUB_CHECKS_REPORTER_KEY | Github app api authentication
+repoSlug | ghprbGhRepository | `${repo}/${slug}` - eg. `elastic/kibana`
+commitSha | ghprbActualCommit | SHA of change, used to reference PR
+buildUrl | BUILD_URL | relevant CI environment url
 
 Different environment variables can be used via the `github_checks_api.json` 
 config file located in the project root.
