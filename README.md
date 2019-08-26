@@ -11,7 +11,7 @@ example
 
 ## Setup
 
-`yarn add --dev github-xyz` (package name will be updated)
+`yarn add --dev @elastic/github-checks-reporter`
 
 github-checks-reporter relies on a number of environment variables in order to 
 call the GitHub API -
